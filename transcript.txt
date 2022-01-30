@@ -4,300 +4,115 @@
 
 1st slide
 Good day dear listeners.
-My name is Alex Sidorov and i am glad to show you my presentation on the topic : Promise API, Async/Await
+My name is Pavel Voitikhovich and today I will tell you a little about React.
 
 2nd slide
-Presentaton contain  five little chapters unleashing presentation theme
-lets looking on them.
+The presentation consists of seven small subtopics, let's see:
 (Click)
-Promise in js - what is it?
+React Components
 (Click)
-Promise API and his five friends
+JSX and what is it.
 (Click)
-Mystification is not about Promisification
+Classes of components and functional components.
 (Click)
-little BIG Microtasks
+Component lifecycle.
 (Click)
-You already can't wait? Its time for async/await
+a few words about the state.
+(click)
+React reconciliation
+(click)
+Properties (props)
+This knowledge will allow us to create a react app.
+But first, let's understand what is React? React is a tool for creating user interfaces. Its main task is to provide a display of what can be seen on web pages. React makes building interfaces much easier by breaking each page into smaller chunks. We call these fragments components.
 (Click next)
 
 3rd slide
-
-All right, lets go with the first part of our little adventure in JS world.
- So... Promise In Js What Is It?
- (Click)
-
-You can see constructor syntax for a promise object on this slide :
-(показываем)
-The function passed to new Promise is called the executor. 
-
 (click)
-
-So the executor eventually moves promise to one of these states:
-state — initially "pending", then changes to either "fulfilled" when resolve is called or "rejected" when reject is called.
-result — initially undefined, then changes to value when resolve(value) called or error when reject(error) is called.
-
-(click)
-
-Consuming functions can be registered (subscribed) using methods: .then, .catch and .finally.
-(click)
-then
-The most important, fundamental one is .then.
-you can see .then syntax on this slide
-The first argument of .then is a function that runs when the promise is resolved, and receives the result.
-
-The second argument of .then is a function that runs when the promise is rejected, and receives the error.
-
-(click)
-
-
-catch
-If we’re interested only in errors, then we can use null as the first argument: 
-.then(null, errorHandlingFunction). Or we can use .catch(errorHandlingFunction), 
-which is exactly the same:
-The call .catch(f) is a complete analog of .then(null, f), it’s just a shorthand.
-
-(click)
-finally finally
-
-The call .finally(f) is similar to .then(f, f) in the sense that function always runs when the promise is settled: be it resolve or reject.
-
-finally is a good handler for performing cleanup, stopping our loading indicators, as they are not needed anymore, no matter what the outcome is.
-
-It’s not exactly an alias of then(f,f) though. There are several important differences:
-
-
-1.A finally handler has no arguments. In finally we don’t know whether the promise is successful or not. 
-That’s all right, as our task is usually to perform “general” finalizing procedures.
-
-2.A finally handler passes through results and errors to the next handler.
-
-Thats all what i want to show you about Promises In Js.
-
-(click next)
-There are 5 static methods in the Promise class. We’ll quickly cover their use cases here.
-(click)
-
-Promise.all
-Let’s say we want many promises to execute in parallel and wait until all of them are ready.
-
-For instance, download several URLs in parallel and process the content once they are all done.
-
-That’s what Promise.all is for.
-
-The syntax is on the fist line of code.
-
-
-
-Promise.all takes an array of promises ( and returns a new promise.
-
-The new promise resolves when all listed promises are settled, and the array of their results becomes its result.
-
-For instance, the Promise.all below settles after 3 seconds, and then its result is an array [1, 2, 3]:
-
-Please note that the order of the resulting array members is the same as in its source promises. 
-Even though the first promise takes the longest time to resolve, it’s still first in the array of results.
-
-
-(click)
-Promise.allSettled
-
-Promise.allSettled just waits for all promises to settle, regardless of the result. The resulting array has:
-
-{status:"fulfilled", value:result} for successful responses,
-{status:"rejected", reason:error} for errors.
-For example, we’d like to fetch the information about multiple users. Even if one request fails, we’re still interested in the others.
-
-The example uses Promise.allSettled you can see on this slide:
-
-
-The results in the line (*) above will be:
-(pause)
-So for each promise we get its status and value or error.
-
-(click)
-Promise.race
-Similar to Promise.all, but waits only for the first settled promise and gets its result (or error).
-
-The Promise.race syntax on the fist line of code:
-
-The first promise here was fastest, so it became the result. 
-After the first settled promise “wins the race”, all further results/errors are ignored.
-
-(click)
-Promise.resolve
-Promise.resolve creates a resolved promise with the result value.
-
-just look at the 1 st lane again:
-
-The method is used for compatibility, when a function is expected to return a promise.
-
-For example, the loadCached function below fetches a URL and remembers (caches) its content. 
-For future calls with the same URL it immediately gets the previous content from cache, 
-but uses Promise.resolve to make a promise of it, so the returned value is always a promise:
-
-We can write loadCached(url).then(…), because the function is guaranteed to return a promise. 
-We can always use .then after loadCached. That’s the purpose of Promise.resolve in the line (*).
-
-(click)
-Promise.reject
-Promise.reject(error) creates a rejected promise with error.
-
-In practice, this method is almost never used.
-
+A React component is, simply put, a piece of code that represents part of a web page. Each component is a JavaScript function that returns a piece of code representing a page fragment.
+To form the page, we call these functions in a certain order, collect the results of the calls together and show them to the user.
+(Click)
+This is what the component code looks like. OurFirstComponent() function returns JSX fragment. We can use ReactDOM to render what this code represents on the page.
 (click next)
 
-We are at the center of our adventure
-Lets talk about promisification
-
+4th slide
+Often when learning React, users come across such a concept as "JSX". There is a misunderstanding and the question: “What is it - JSX, and why is this technology so praised?”. Let's figure it out together.
 (click)
-
-“Promisification” is a long word for a simple transformation. 
-It’s the conversion of a function that accepts a callback into a function that returns a promise.
-Such transformations are often required in real-life, 
-as many functions and libraries are callback-based. 
-But promises are more convenient, so it makes sense to promisify them.
-
-For instance, we have loadScript function (src, callback)
- 
+JSX is a "mix" of JavaScript syntax, HTML, and some CSS. And at its core, it is a tool for distributing page elements within the markup using JavaScript. JSX preaches the idea that you should keep the markup with the power of JavaScript and not separate technologies by placing markup and logic in separate files. Based on this “idea”, React creates its own components that contain both markup and logic inside.
 (click)
-
-Let’s promisify it. The new loadScriptPromise(src) function achieves the same result, 
-but it accepts only src (no callback) and returns a promise.
-
-(pause)
-
-Now loadScriptPromise fits well in promise-based code.
-As we can see, it delegates all the work to the original loadScript, 
-providing its own callback that translates to promise resolve/reject.
- 
- (click next)
- 
- Now i tell about microtasks which do a great job.
- 
- (click)
- Promise handlers .then/.catch/.finally are always asynchronous.
-
-Even when a Promise is immediately resolved, the code on the lines below .then/.catch/.finally will still execute before these handlers.
-
-Here’s a demo:
-(pause)
-
-If you run it, you see code finished first, and then promise done!.
-
-That’s strange, because the promise is definitely done from the beginning.
-
-Why did the .then trigger afterwards? What’s going on?
-
-(click)
-Microtasks queue
-Asynchronous tasks need proper management. For that, the ECMA standard specifies an internal queue PromiseJobs, more often referred to as the 
-“microtask queue” (ES eight term).
-
-As stated in the specification:
-
-The queue is first-in-first-out: tasks enqueued first are run first.
-Execution of a task is initiated only when nothing else is running.
-Or, to say more simply, when a promise is ready, its .then/catch/finally handlers are put into the queue; they are not executed yet. 
-When the JavaScript engine becomes free from the current code, it takes a task from the queue and executes it.
-
-That’s why “code finished” in the example above shows first.
-
-(click)
-
-What if the order matters for us? How can we make code finished run after promise done?
-
-Easy, just put it into the queue with .then:
-(pause)
-Now the order is as intended.
-In most Javascript engines, including browsers and Node.js, the concept of microtasks is closely tied with the “event loop” and “macrotasks”. 
-thats all today about microtascs
+JSX makes it pretty easy to build complex expressions and embed variables right inside those expressions.
+(3 картинка) That is, you can create any variable, in our case it is “name”, and, framing it with curly brackets, insert it into the JSX code. By the way, when you need to insert any JavaScript script inside the JSX code, this is all done using curly braces.
 (click next)
 
-Async/await
-There’s a special syntax to work with promises in a more comfortable fashion, called “async/await”. It’s surprisingly easy to understand and use.
-
+5th slide
+Let speak about classes of components and functional components.
 (click)
-Async functions
-Let’s start with the async keyword. It can be placed before a function, like this:
-(pause)
-The word “async” before a function means one simple thing: a function always returns a promise. 
-Other values are wrapped in a resolved promise automatically.
-
+Function on screen is a valid React component because it takes a single "props" object argument (which stands for properties) with data and returns a React element. We call such components "functional" because they are literally JavaScript functions.
 (click)
-For instance, this function returns a resolved promise with the result of 1; let’s test it:
-
+Component classes must contain a function called render(). This function returns the JSX code of the component. They can be used in the same way as functional components.
 (click)
-…We could explicitly return a promise, which would be the same:
-(pause)
-So, async ensures that the function returns a promise, and wraps non-promises in it.
- Simple enough, right? But not only that.
- There’s another keyword, await, that works only inside async functions, and it’s pretty cool.
- 
- (click)
- Await
-The syntax:
-(pause)
-
-The keyword await makes JavaScript wait until that promise settles and returns its result.
-
+And why did developers switch to functional components?
+here are some reasons
 (click)
-
-Here’s an example with a promise that resolves in 1 second:
-(pause)
-The function execution “pauses” at the line (*) and resumes when the promise settles, with result becoming its result. 
-So the code above shows “done!” in one second.
-
-Let’s emphasize: await literally makes JavaScript wait until the promise settles, 
-and then go on with the result. That doesn’t cost any CPU resources, 
-because the engine can do other jobs in the meantime: execute other scripts, handle events, etc.
-
-It’s just a more elegant syntax of getting the promise result than promise.then, easier to read and write.
-
+1. Difficult to reuse state logic across class components.
 (click)
-
-If we try to use await in non-async function, there would be a syntax error:
-
-We will get this error if we do not put async before a function. As said, await only works inside an async function.
-
+2. When a class component grows, it becomes an unmanageable mess of state logic and side effects.
 (click)
-Error handling
-If a promise resolves normally, then await promise returns the result. 
-But in the case of a rejection, it throws the error, just as if there were a throw statement at that line.
-(просто читаем текст слайда)
-
+3. Classes confuse both humans and machines.
+To solve all these problems, hooks appeared in react 16.8.
 (click)
-In real situations, the promise may take some time before it rejects. In that case there will be a delay before await throws an error.
-
-We can catch that error using try..catch, the same way as a regular throw:
-
-(click)
-
-In the case of an error, the control jumps to the catch block. We can also wrap multiple lines:
-
-(click)
-If we don’t have try..catch, then the promise generated by the call of the async function f() becomes rejected. 
-We can append .catch to handle it:
-
-(click)
-The async keyword before a function has two effects:
-
-Makes it always return a promise.
-Allows await to be used in it.
-The await keyword before a promise makes JavaScript wait until that promise settles, and then:
-
-If it’s an error, the exception is generated — same as if throw error were called at that very place.
-Otherwise, it returns the result.
-Together they provide a great framework to write asynchronous code that is easy to both read and write.
-
-With async/await we rarely need to write promise.then/catch, 
-but we still shouldn’t forget that they are based on promises, 
-because sometimes (e.g. in the outermost scope) we have to use these methods. 
-Also Promise.all is nice when we are waiting for many tasks simultaneously.
-
-
+Hooks are functions that you can use to "hook" to React's state and lifecycle methods from functional components. Hooks don't work inside classes - they give you the ability to use React without classes.
+In this example, useState is the hook. We call it to endow our functional component with internal state. React will store this state between renders. The call to useState returns an array with two elements that contains: the current value of the state and a function to update it. This function can be used anywhere, for example, in an event handler. It is similar to this.setState in classes, but does not merge the new and old state together.
 (click next)
 
-Thanks for watching ,  and have a nice day.
+6th slide
+Let's talk about what is the life cycle of a component.
+During operation, a component goes through a series of life cycle stages. At each stage, a specific function is called, in which we can define any actions.
+(click)
+1. constructor(props): constructor where the initialization of the component takes place
+(click)
+2. static getDerivedStateFromProps(props, state): called just before the component is rendered. This method does not have access to the current component object (that is, refer to the component object via this) and should return an object to update the state object, or null if there is nothing to update.
+(click)
+3. render(): rendering a component.
+(click)
+4. componentDidMount(): Called after the component has rendered. Here you can query remote resources
+(click)
+5. componentWillUnmount(): called before the component is removed from the DOM
+all this path together constitutes the life cycle
+(click next)
+
+7th slide
+A state is all information about an element, including information about its display.
+(click)
+The state is of two types:
+1. local: the useState hook is used to determine such a state.
+2. shared: This state is created using the useContext hook (often in combination with the useReducer hook) or libraries like Redux.
+(click next)
+
+8th slide
+react recanciliation this is the algorithm behind what we used to call 'virtualDOM'.
+(click)
+It all starts with a basic unit, a node. From them, using a set of render methods, a whole tree of react elements is assembled, which describes the entire state of the elements and is stored in memory. This tree is called current.
+Next, this tree enters the rendering environment, and this environment will translate the tree into a set of DOM operations necessary to render the current changes.
+
+At the same time, it prioritizes operations according to the urgency of their hitting the user.When the site is loaded for the first time, the rendering environment renders the entire DOM tree and after that the user sees the site or application in front of him.
+
+Changes to the site, such as clicking a button, result in a change to our site. As a result, a new tree is built and is called work-in-progress.
+
+Next, we compare the work-in-progress tree and the current tree and calculate the difference between them. And already only the difference of these trees is given to the rendering environment. Further, the entire DOM-tree will not be redrawn, but only changes will be made.
+(click next)
+
+9th slide
+let speak about props.
+(click)
+React elements can also describe our own components. When React encounters such an element, it collects all JSX attributes and child elements into one object and passes them to our component. This object is called props.A component should never write anything to its props, regardless of whether it is functional or class.
+(click)
+let's look at the example of the sum function.Such functions are called "pure" because they do not change their inputs and predictably return the same result for the same arguments.
+(click)
+And here is an example of an impure function - it writes data to its own arguments. React is quite flexible, but there is one rule that must not be broken:
+(click)
+React components are required to behave like pure functions with respect to their props.
+(click next)
+
+That's all I wanted to say today, thanks for watching ,  and have a nice day.
 Goodbye
 (занавес))))
